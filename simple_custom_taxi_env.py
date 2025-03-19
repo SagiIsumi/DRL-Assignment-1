@@ -1,4 +1,4 @@
-import gym
+#import gym
 import numpy as np
 import importlib.util
 import time
@@ -23,11 +23,33 @@ class SimpleTaxiEnv():
         self.current_fuel = fuel_limit
         self.passenger_picked_up = False
         
-        self.stations = [(0, 0), (0, self.grid_size - 1), (self.grid_size - 1, 0), (self.grid_size - 1, self.grid_size - 1)]
+        self.stations = []
+        for i in range(4):
+            while True:
+                station=(random.randint(0, self.grid_size - 1),random.randint(0, self.grid_size - 1))
+                if station not in self.stations:
+                    self.stations.append(station)
+                    break
+                else:
+                    continue
         self.passenger_loc = None
-       
-        self.obstacles = set()  # No obstacles in simple version
-        self.destination = None
+        if grid_size>=8:
+            obstacle_num=random.randint(8,20)
+        elif grid_size==5:
+            obstacle_num=random.randint(0,5)
+        else:
+            obstacle_num=random.randint(3,10)
+        self.obstacles = []
+        for i in range(obstacle_num):
+            while True:
+                obstacle=(random.randint(0, self.grid_size - 1),random.randint(0, self.grid_size - 1))
+                if obstacle not in self.stations and obstacle not in self.obstacles:
+                    self.obstacles.append(obstacle)
+                    break
+                else:
+                    continue
+          # No obstacles in simple version
+        
 
     def reset(self):
         """Reset the environment, ensuring Taxi, passenger, and destination are not overlapping obstacles"""
@@ -74,7 +96,7 @@ class SimpleTaxiEnv():
                     self.passenger_loc = self.taxi_pos
         else:
             if action == 4:  # PICKUP
-                if self.taxi_pos == self.passenger_loc:
+                if self.taxi_pos == self.passenger_loc and self.passenger_picked_up==False:
                     self.passenger_picked_up = True
                     self.passenger_loc = self.taxi_pos  
                 else:
@@ -134,24 +156,26 @@ class SimpleTaxiEnv():
 
         grid = [['.'] * self.grid_size for _ in range(self.grid_size)]
         
-        '''
+
         # Place passenger
-        py, px = passenger_pos
+        py, px = self.passenger_loc
         if 0 <= px < self.grid_size and 0 <= py < self.grid_size:
             grid[py][px] = 'P'
-        '''
+
         
         
-        grid[0][0]='R'
-        grid[0][4]='G'
-        grid[4][0]='Y'
-        grid[4][4]='B'
-        '''
+        grid[self.stations[0][0]][self.stations[0][1]]='R'
+        grid[self.stations[1][0]][self.stations[1][1]]='G'
+        grid[self.stations[2][0]][self.stations[2][1]]='Y'
+        grid[self.stations[3][0]][self.stations[3][1]]='B'
+
         # Place destination
-        dy, dx = destination_pos
+        dy, dx = self.destination
         if 0 <= dx < self.grid_size and 0 <= dy < self.grid_size:
             grid[dy][dx] = 'D'
-        '''
+        #Place Obstacles
+        for ox,oy in self.obstacles:
+            grid[ox][oy] = '|'
         # Place taxi
         ty, tx = taxi_pos
         if 0 <= tx < self.grid_size and 0 <= ty < self.grid_size:
@@ -164,6 +188,7 @@ class SimpleTaxiEnv():
         #print(f"Destination: ({dx}, {dy})")
         print(f"Fuel Left: {fuel}")
         print(f"Last Action: {self.get_action_name(action)}\n")
+        print(f"Passenger in taxi: {self.passenger_picked_up}")
 
         # Print grid
         for row in grid:
