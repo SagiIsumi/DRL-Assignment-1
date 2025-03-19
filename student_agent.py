@@ -13,14 +13,16 @@ def get_key_state(state):
     key_state=f"({state[0]},{state[1]})_({state[2]},{state[3]})_({state[4]},{state[5]})_({state[6]},{state[7]})_({state[8]},{state[9]})_({state[10]},{state[11]},{state[12]},{state[13]})_{state[14]}_{state[15]}"
     return key_state
 def get_action(obs):
-    for i in range(50):
+    initial_state=get_key_state(obs)
+    for i in range(800):
         # TODO: Train your own agent
         key_state=get_key_state(obs)
         if key_state not in q.keys():
             taxi_row, taxi_col, _,_,_,_,_,_,_,_,obstacle_north, obstacle_south, obstacle_east, obstacle_west, passenger_look,destination_look = obs
-            obs=[taxi_row, taxi_col,random.randint(5,10),random.randint(5,10),random.randint(5,10),random.randint(5,10),\
-                random.randint(5,10),random.randint(5,10),random.randint(5,10),random.randint(5,10),obstacle_north, obstacle_south, obstacle_east, obstacle_west, passenger_look,destination_look]
+            obs=[taxi_row, taxi_col,random.randint(0,9),random.randint(0,9),random.randint(0,9),random.randint(0,9),\
+                random.randint(0,9),random.randint(0,9),random.randint(0,9),random.randint(0,9),obstacle_north, obstacle_south, obstacle_east, obstacle_west, passenger_look,destination_look]
         else:
+            q[initial_state]=q[key_state]
             action_probs = softmax(q[key_state])
             action = np.random.choice(6, p=action_probs)
             return action # Choose a random action
