@@ -26,7 +26,7 @@ def get_action(obs):
             action_probs = softmax(q[key_state])
             action = np.random.choice(6, p=action_probs)
             return action # Choose a random action
-        return random.choice([0,1,2,3,4,5])
+    return random.choice([0,1,2,3,4,5])
     # HINT: If you're using a Q-table, consider designing a custom key based on `obs` to store useful information.
     # NOTE: Keep in mind that your Q-table may not cover all possible states in the testing environment.
     #       To prevent crashes, implement a fallback strategy for missing keys. 
