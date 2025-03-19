@@ -29,4 +29,5 @@ def get_action(obs):
 
     return action # Choose a random action
     # You can submit this random agent to evaluate the performance of a purely random strategy.
-
+if __name__=="__main__":
+    print(q)
