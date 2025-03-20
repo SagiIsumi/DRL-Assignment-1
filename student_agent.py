@@ -23,7 +23,7 @@ def get_action(obs):
     else:
         if not (obs[10] or obs[11] or obs[12] or obs[13] or obs[14] or obs[15]):
             if obs[0]<possible_broder and obs[1]<possible_broder:
-                action = random.choice([0,1,2,3,4,5])
+                action = random.choice([0,1,2,3])
             else:
                 action_probs = softmax(q[key_state])
                 action = np.random.choice(6, p=action_probs)
