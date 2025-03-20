@@ -16,11 +16,12 @@ def get_key_state(state):
 def get_action(obs):
     rand_num=random.random()
     key_state=get_key_state(obs)
+    possible_broder=max(obs[2],obs[3],obs[4],obs[5],obs[6],obs[7],obs[8],obs[9])
     if key_state not in q.keys():
         action = random.choice([0,1,2,3,4,5])
     else:
         if not (obs[10] or obs[11] or obs[12] or obs[13] or obs[14] or obs[15]):
-            if rand_num<0.25:
+            if obs[0]<possible_broder and obs<possible_broder:
                 action = random.choice([0,1,2,3,4,5])
             else:
                 action_probs = softmax(q[key_state])
