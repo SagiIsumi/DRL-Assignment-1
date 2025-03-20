@@ -14,13 +14,20 @@ def get_key_state(state):
     #key_state=f"({state[0]},{state[1]})_({state[10]},{state[11]},{state[12]},{state[13]})_{state[14]}_{state[15]}"
     return key_state
 def get_action(obs):
-
+    rand_num=random.random()
     key_state=get_key_state(obs)
-    if key_state not in q.keys() or not (obs[10] or obs[11] or obs[12] or obs[13] or obs[14] or obs[15]):
+    if key_state not in q.keys():
         action = random.choice([0,1,2,3,4,5])
     else:
-        action_probs = softmax(q[key_state])
-        action = np.random.choice(6, p=action_probs)
+        if not (obs[10] or obs[11] or obs[12] or obs[13] or obs[14] or obs[15]):
+            if rand_num<0.25:
+                action = random.choice([0,1,2,3,4,5])
+            else:
+                action_probs = softmax(q[key_state])
+                action = np.random.choice(6, p=action_probs)
+        else:
+            action_probs = softmax(q[key_state])
+            action = np.random.choice(6, p=action_probs)
     return action
     # HINT: If you're using a Q-table, consider designing a custom key based on `obs` to store useful information.
     # NOTE: Keep in mind that your Q-table may not cover all possible states in the testing environment.
