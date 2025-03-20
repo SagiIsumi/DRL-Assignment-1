@@ -10,13 +10,13 @@ def softmax(x):
     exp_x = np.exp(x - np.max(x))  # Numeric stability
     return exp_x / exp_x.sum()
 def get_key_state(state):
-    #key_state=f"({state[0]},{state[1]})_({state[2]},{state[3]})_({state[4]},{state[5]})_({state[6]},{state[7]})_({state[8]},{state[9]})_({state[10]},{state[11]},{state[12]},{state[13]})_{state[14]}_{state[15]}"
     key_state=f"({state[0]},{state[1]})_({state[10]},{state[11]},{state[12]},{state[13]})_{state[14]}_{state[15]}"
+    #key_state=f"({state[0]},{state[1]})_({state[10]},{state[11]},{state[12]},{state[13]})_{state[14]}_{state[15]}"
     return key_state
 def get_action(obs):
 
     key_state=get_key_state(obs)
-    if key_state not in q.keys():
+    if key_state not in q.keys() or not (obs[10] or obs[11] or obs[12] or obs[13] or obs[14] or obs[15]):
         action = random.choice([0,1,2,3,4,5])
     else:
         action_probs = softmax(q[key_state])
